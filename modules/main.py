@@ -17,13 +17,13 @@ def subfilter(pillow_img):
     return img
 
 
-histogram = ht.getTrainedHistogram('../histogram_training/cleaned')
+histogram = ht.get_trained_histogram('../histogram_training/cleaned')
 threshold = 0.0003
 
 # img = cv.imread('histogram_training/raw/2019-11-21_20.40.29.png')
 img = cv.imread('../scene/14.png')
 
-pixelsOfThreshold = ht.getPixelsOfThreshold(img, histogram, threshold)
+pixelsOfThreshold = ht.get_pixels_of_threshold(img, histogram, threshold)
 
 filtered = ht.get_filtered_image('1', img, histogram, threshold)
 filtered_ = subfilter(filtered)

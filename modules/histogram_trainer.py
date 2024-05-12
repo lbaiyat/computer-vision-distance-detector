@@ -5,14 +5,14 @@ import cv2 as cv
 import glob
 from PIL import Image
 
-def getHSVimage(image_path):
+def get_hsv_image(image_path):
     image = cv.imread(image_path, 1)
     hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)
 
     return hsv
 
-def getBlankHistogram():
-    histogram = [];
+def get_blank_histogram():
+    histogram = []
     for h in range(180):
         a = []
         for s in range(256):
@@ -21,7 +21,7 @@ def getBlankHistogram():
 
     return np.array(histogram)
 
-def fillHistogram(img, histogram):
+def fill_histogram(img, histogram):
 
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -36,29 +36,29 @@ def fillHistogram(img, histogram):
     return histogram
 
 #normalize histogram
-def normalizeHistogram(histogram, totalObservations):
-    normalizedHistogram = []
+def normalize_histogram(histogram, totalObservations):
+    normalized_histogram = []
 
     for h in range(180):
         a = []
         for s in range(256):
             normalizedValue = histogram[h, s] / totalObservations
             a.append(normalizedValue)
-        normalizedHistogram.append(a)
+        normalized_histogram.append(a)
 
-    return np.array(normalizedHistogram)
+    return np.array(normalized_histogram)
 
-def countObservations(histogram):
-    sum = 0;
+def count_observations(histogram):
+    sum = 0
     for i in range(180):
         for j in range(256):
             sum = sum + histogram[i,j]
 
     return sum
 
-def getTrainedHistogram(path):
+def get_trained_histogram(path):
     #path should be the directory of a folder containing training images
-    histogram = getBlankHistogram()
+    histogram = get_blank_histogram()
 
     data_path = os.path.join(path, '*g')
     images = glob.glob(data_path)
@@ -67,21 +67,21 @@ def getTrainedHistogram(path):
     #loops through all the images
     for i in images:
         # print("histogram training: processing image", current, "of", numImages)
-        hsvImage = getHSVimage(i)
-        fillHistogram(hsvImage, histogram)
+        hsv_image = get_hsv_image(i)
+        fill_histogram(hsv_image, histogram)
         current = current + 1
-    numObservations = countObservations(histogram)
+    num_observations = count_observations(histogram)
 
     print('done training histogram')
     #get normalized histogram
-    return normalizeHistogram(histogram, numObservations)
+    return normalize_histogram(histogram, num_observations)
 
-def getPixelsOfThreshold(origImage, histogram, threshold):
+def get_pixels_of_threshold(orig_image, histogram, threshold):
     # find pixels of the image that are within the given threshold
     # histogram should be normalized
 
-    image = cv.cvtColor(origImage, cv.COLOR_BGR2HSV)
-    listOfPixels = []
+    image = cv.cvtColor(orig_image, cv.COLOR_BGR2HSV)
+    list_of_pixels = []
 
     for i in range(image.shape[0]):
         for j in range(image.shape[1]):
@@ -91,15 +91,15 @@ def getPixelsOfThreshold(origImage, histogram, threshold):
             #checks if the hue and saturation are within the threshold
             if (histogram[hue, saturation] >= threshold):
                 coordinates = (i,j)
-                listOfPixels.append(coordinates)
-    return np.array(listOfPixels)
+                list_of_pixels.append(coordinates)
+    return np.array(list_of_pixels)
 
-def filterImageByPixels(image, listOfPixels):
+def filter_image_by_pixels(image, listOfPixels):
     #image should be a pillow image
 
     #return a new image that only shows the corresponding pixels
-    newImage = Image.new('RGB', (image.shape[1], image.shape[0]), 0)
-    imageGrid = newImage.load()
+    new_image = Image.new('RGB', (image.shape[1], image.shape[0]), 0)
+    image_grid = new_image.load()
 
     for pixel in listOfPixels:
         x = int(pixel[0])
@@ -109,18 +109,18 @@ def filterImageByPixels(image, listOfPixels):
         g = image[x,y,1]
         b = image[x,y,2]
         try:
-            imageGrid[y,x] = (b, r, g)
+            image_grid[y,x] = (b, r, g)
         except IndexError:
             a = 1
-    return newImage
+    return new_image
 
 # pass in a cv image along with the trained histogram to get the filtered
 def get_filtered_image(desc, image, histogram, threshold):
-    image_pixels = getPixelsOfThreshold(image, histogram, threshold)
+    image_pixels = get_pixels_of_threshold(image, histogram, threshold)
     image_ = image
 
     cv.imshow(desc, image)
-    img_filtered = filterImageByPixels(image_, image_pixels)
+    img_filtered = filter_image_by_pixels(image_, image_pixels)
     # img_filtered.show()
 
     # img_filtered is a PIL.Image object

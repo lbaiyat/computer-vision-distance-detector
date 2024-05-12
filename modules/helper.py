@@ -1,7 +1,6 @@
 import numpy as np
 import cv2 as cv
 from PIL import Image
-import sklearn
 from sklearn.cluster import KMeans
 import math
 
@@ -102,23 +101,23 @@ def patch_image(image):
     a = 1
 
 def get_avg_coordinate(coords_list):
-    xSum = 0
-    ySum = 0
+    x_sum = 0
+    y_sum = 0
     num_coords = len(coords_list)
     for coord in coords_list:
         x = coord[0]
         y = coord[1]
 
-        xSum = xSum + x
-        ySum = ySum + y
+        x_sum = x_sum + x
+        y_sum = y_sum + y
 
-    return (xSum / num_coords, ySum / num_coords)
+    return (x_sum / num_coords, y_sum / num_coords)
 
 def closest_point(coordinate, coords_list):
 
     x = coordinate[0]
     y = coordinate[1]
-    currIndex = 0
+    curr_index = 0
 
     diffs = []
 
@@ -127,8 +126,8 @@ def closest_point(coordinate, coords_list):
         y_ = coord[1]
 
         diff = np.sqrt(np.power(x-x_, 2) + np.power(y-y_, 2))
-        diffs.append((diff, currIndex))
-        currIndex = currIndex + 1
+        diffs.append((diff, curr_index))
+        curr_index = curr_index + 1
 
     diffs.sort(key=lambda x: x[0])
 
@@ -144,7 +143,7 @@ def closest_points(coord, coords_list):
     closest_points = []
     x = coordinate[0]
     y = coordinate[1]
-    currIndex = 0
+    curr_index = 0
 
     diffs = []
 
@@ -153,8 +152,8 @@ def closest_points(coord, coords_list):
         y_ = coord[1]
 
         diff = np.sqrt(np.power(x-x_, 2) + np.power(y-y_, 2))
-        diffs.append((diff, currIndex))
-        currIndex = currIndex + 1
+        diffs.append((diff, curr_index))
+        curr_index = curr_index + 1
 
 
     diffs.sort(key=lambda x: x[0])
@@ -284,23 +283,23 @@ def get_block_dimensions(pixels):
 
 
     #pick 200 points to filter out noise
-    c0_minX = int(sum(c0_x[0:300]) / len(c0_x[0:300]))
-    c0_maxX = int(sum(c0_x[-300:]) / len(c0_x[-300:]))
-    c0_minY = int(sum(c0_y[0:300]) / len(c0_y[0:300]))
-    c0_maxY = int(sum(c0_y[-300:]) / len(c0_y[-300:]))
-    print('c0 | minx:', c0_minX, 'maxX', c0_maxX, 'minY', c0_minY, 'maxY', c0_maxY)
+    c0_min_x = int(sum(c0_x[0:300]) / len(c0_x[0:300]))
+    c0_max_x = int(sum(c0_x[-300:]) / len(c0_x[-300:]))
+    c0_min_y = int(sum(c0_y[0:300]) / len(c0_y[0:300]))
+    c0_max_y = int(sum(c0_y[-300:]) / len(c0_y[-300:]))
+    print('c0 | minx:', c0_min_x, 'maxX', c0_max_x, 'minY', c0_min_y, 'maxY', c0_max_y)
 
-    c0_x = c0_maxX - c0_minX
-    c0_y = c0_maxY - c0_minY
+    c0_x = c0_max_x - c0_min_x
+    c0_y = c0_max_y - c0_min_y
 
-    c1_minX = int(sum(c1_x[0:300]) / len(c1_x[0:300]))
-    c1_maxX = int(sum(c1_x[-300:]) / len(c1_x[-300:]))
-    c1_minY = int(sum(c1_y[0:300]) / len(c1_y[0:300]))
-    c1_maxY = int(sum(c1_y[-300:]) / len(c1_y[-300:]))
-    print('c1 | minx:', c1_minX, 'maxX', c1_maxX, 'minY', c1_minY, 'maxY', c1_maxY)
+    c1_min_x = int(sum(c1_x[0:300]) / len(c1_x[0:300]))
+    c1_max_x = int(sum(c1_x[-300:]) / len(c1_x[-300:]))
+    c1_min_y = int(sum(c1_y[0:300]) / len(c1_y[0:300]))
+    c1_max_y = int(sum(c1_y[-300:]) / len(c1_y[-300:]))
+    print('c1 | minx:', c1_min_x, 'maxX', c1_max_x, 'minY', c1_min_y, 'maxY', c1_max_y)
 
-    c1_x = c1_maxX - c1_minX
-    c1_y = c1_maxY - c1_minY
+    c1_x = c1_max_x - c1_min_x
+    c1_y = c1_max_y - c1_min_y
 
     print('c0:', c0_x, c0_y)
     print('c1:', c1_x, c1_y)
