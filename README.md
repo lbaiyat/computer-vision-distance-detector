@@ -21,7 +21,6 @@
             <li><a href="#hough-transform">Hough Transformation</a></li>
         </ul>
     </li>
-    <li><a href="#final-result">Final Result</a></li>
 
 
 </ul>
