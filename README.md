@@ -1,9 +1,3 @@
-<style>
-  p {
-    font-size: 15px;
-  }
-</style>
-
 <h1>Computer Vision Distance Detector</h1>
 <hr>
 
