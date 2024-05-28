@@ -2,7 +2,11 @@ import numpy as np
 import cv2 as cv
 
 # local imports
-from modules import canny, harris, helper, histogram_trainer as ht, hough
+# from modules import canny, harris, helper, histogram_trainer as ht, hough
+import canny
+import harris
+import helper
+import histogram_trainer as ht
 import transformations
 
 def subfilter(pillow_img):
