@@ -55,7 +55,7 @@ pip install -r requirements.txt;
 Run the application
 </h3>
 <pre><code class="language-bash">
-python3 main.py;
+python3 modules/main.py;
 </code></pre>
 
 </div>
